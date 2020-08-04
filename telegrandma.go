@@ -31,10 +31,6 @@ func NewBot(token string) (*Bot, error) {
 	return &Bot{BotToken: token}, nil
 }
 
-func (bot *Bot) SetHttpClient(requester Requester) {
-	bot.HttpClient = requester
-}
-
 func (bot *Bot) GetUpdates() (*GetUpdatesResponse, error) {
 	urlTarget := buildRootURLFrom(bot.BotToken) + "/" + GetUpdatesEndpoint
 
@@ -81,10 +77,10 @@ func (bot *Bot) SendMessage(chatID, content string) (bool, error) {
 	buf.ReadFrom(resp.Body)
 	newStr := buf.String()
 
-	log.Printf("Telegram return: %v\n", newStr)
+	log.Printf("Telegram response: %v\n", newStr)
 
 	if err != nil {
-		log.Printf("Request Error: %v\n", err)
+		log.Printf("Request Error: [%v]\n", err)
 		return false, err
 	}
 
@@ -113,16 +109,16 @@ func (bot *Bot) SendHTML(chatID, content string) (bool, error) {
 	buf.ReadFrom(resp.Body)
 	newStr := buf.String()
 
-	log.Printf("Telegram return: %v\n", newStr)
+	log.Printf("Telegram response: %v\n", newStr)
 
 	if err != nil {
-		log.Printf("Request Error: %v\n", err)
+		log.Printf("Request Error: [%v]\n", err)
 		return false, err
 	}
 
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		log.Printf("Request Error. Response Body: [%s]\n", resp.Body)
-		return false, errors.New(fmt.Sprintf("Request Error: Status code %d\n", resp.StatusCode))
+		return false, errors.New(fmt.Sprintf("Request Error: Status code [%d]\n", resp.StatusCode))
 	}
 
 	return true, nil
