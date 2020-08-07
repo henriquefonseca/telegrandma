@@ -1,0 +1,24 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+
+# Test binary, built with `go test -c`
+*.test
+
+# IDE files
+.vscode
+.DS_Store
+.idea
+
+# Misc
+*.workspace
+
+# Dependencies
+vendor
+
+# Folders
+/vendor
+/Godeps
+/dist
