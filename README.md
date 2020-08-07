@@ -14,7 +14,7 @@ go get -u github.com/henriquefonseca/telegrandma
 
 ## Code Example
 
-After [creating the Telegram bot](https://core.telegram.org/bots#3-how-do-i-create-a-bot) you will receive a bot [<token>](https://core.telegram.org/bots/api#authorizing-your-bot).
+After [creating the Telegram bot](https://core.telegram.org/bots#3-how-do-i-create-a-bot) you will receive a bot [token](https://core.telegram.org/bots/api#authorizing-your-bot).
 
 For sending messages you will gonna need a [chatID](https://core.telegram.org/bots/api#chat).
 
