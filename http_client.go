@@ -5,10 +5,10 @@ import (
 	"net/http"
 )
 
-// Http client struct for requests
+// HttpClient: Http client struct for requests
 type HttpClient struct{}
 
-// Get is a function for making requests using GET Http method.
+// Get: is a function for making requests using GET Http method.
 //
 // It receives an url and headers and creates a new GET request, returning *http.Response.
 //
