@@ -2,6 +2,7 @@
 
 [![Build Status](https://github.com/henriquefonseca/telegrandma/workflows/Go/badge.svg)](https://github.com/henriquefonseca/telegrandma/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/henriquefonseca/telegrandma)](https://goreportcard.com/report/github.com/henriquefonseca/telegrandma)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/henriquefonseca/telegrandma)](https://pkg.go.dev/github.com/henriquefonseca/telegrandma)
 [![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/gomods/athens.svg)](go.mod)
 [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -25,6 +26,7 @@ So now you're ready to use Telegrandma:
 package main
 
 import (
+    "log"
     "github.com/henriquefonseca/telegrandma"
 )
 
@@ -36,13 +38,13 @@ var (
 func main() {
     bot, err := telegrandma.NewBot(botToken)
     if err != nil {
-	    t.Errorf("Unexpected error: [%s]\n", err)
+	    log.Printf("Unexpected error: [%s]\n", err)
     }
 
     // Accessing bot last updates
     updates, err := bot.GetUpdates()
 	if err != nil {
-		t.Errorf("Unexpected error: [%s]\n", err)
+		log.Printf("Unexpected error: [%s]\n", err)
 	}
 
     log.Println("updates.Result", updates.Result)
@@ -50,13 +52,13 @@ func main() {
     // Send a text message
     msg := "What happens at Nana's… stays at Nana's."
 	if success, err := bot.SendMessage(ChatID, msg); !success {
-		t.Errorf("Unexpected error: The message was not sent. Error: [%s]", err)
+		log.Printf("Unexpected error: The message was not sent. Error: [%s]", err)
     }
     
     // Send a message with allowed html tags
     msg := "<b>If nothing is going well, call your grandmother.</b>"
 	if success, err := bot.SendHTML(ChatID, msg); !success {
-		t.Errorf("Unexpected error: The message was not sent. Error: [%s]", err)
+		log.Printf("Unexpected error: The message was not sent. Error: [%s]", err)
 	}
 
 }
