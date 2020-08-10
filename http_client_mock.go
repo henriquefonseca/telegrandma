@@ -8,14 +8,14 @@ import (
 	"net/http"
 )
 
-// Http client mock for tests
+// HttpClientMock: Http client mock for tests
 type HttpClientMock struct {
 	ExpectedUrl            string
 	ResponseBody           string
 	ResponseHttpStatusCode int
 }
 
-// Get is a function for mocking GET requests.
+// Get: is a function for mocking GET requests.
 //
 // It receives an url and headers and compares url with the string received by SetExpectedUrl function.
 func (hcMock *HttpClientMock) Get(url string, headers map[string]string) (*http.Response, error) {
@@ -45,17 +45,17 @@ func (hcMock *HttpClientMock) Get(url string, headers map[string]string) (*http.
 	}, nil
 }
 
-// SetExpectedUrl sets the url HttpClientMock expects to receive
+// SetExpectedUrl: sets the url HttpClientMock expects to receive
 func (hcMock *HttpClientMock) SetExpectedUrl(expectedUrl string) {
 	hcMock.ExpectedUrl = expectedUrl
 }
 
-// SetResponseHttpStatusCode sets the http status code for response
+// SetResponseHttpStatusCode: sets the http status code for response
 func (hcMock *HttpClientMock) SetResponseHttpStatusCode(responseHttpStatusCode int) {
 	hcMock.ResponseHttpStatusCode = responseHttpStatusCode
 }
 
-// SetExpectedUrl sets the response body
+// SetResponseBody sets: the response body
 func (hcMock *HttpClientMock) SetResponseBody(responseBody string) {
 	hcMock.ResponseBody = responseBody
 }

@@ -12,22 +12,22 @@ import (
 )
 
 const (
-	// Telegram base url
+	// URLBase: Telegram base url
 	URLBase = "https://api.telegram.org/"
-	// Telegram sendMessage endpoint
+	// SendMessageEndpoint: Telegram sendMessage endpoint
 	SendMessageEndpoint = "sendMessage"
-	// Telegram getUpdates endpoint
+	// GetUpdatesEndpoint: Telegram getUpdates endpoint
 	GetUpdatesEndpoint = "getUpdates"
 )
 
-// Struct representing a telegram bot
+// Bot: Struct representing a telegram bot
 type Bot struct {
 	BotToken   string
 	ChatID     string
 	HttpClient Requester
 }
 
-// Create a telegram bot with a token
+// NewBot: Create a telegram bot with a token
 //
 // It returns an error if a token is not provided
 func NewBot(token string) (*Bot, error) {
@@ -38,7 +38,7 @@ func NewBot(token string) (*Bot, error) {
 	return &Bot{BotToken: token}, nil
 }
 
-// GetUpdates returns an array of incoming updates from bot.
+// GetUpdates: returns an array of incoming updates from bot.
 func (bot *Bot) GetUpdates() (*GetUpdatesResponse, error) {
 	urlTarget := buildRootURLFrom(bot.BotToken) + "/" + GetUpdatesEndpoint
 
@@ -72,9 +72,9 @@ func (bot *Bot) GetUpdates() (*GetUpdatesResponse, error) {
 	return &response, nil
 }
 
-// SendMessage is used to send a message to chatID using bot
+// SendMessage: is used to send a message to chatID using bot
 //
-// It returns a boolean indicating if the operation was successfull.
+// It returns a boolean indicating if the operation was successful.
 // If it is not, the error must provide a description about the problem.
 func (bot *Bot) SendMessage(chatID, content string) (bool, error) {
 	if len(strings.TrimSpace(chatID)) > 0 {
@@ -108,11 +108,11 @@ func (bot *Bot) SendMessage(chatID, content string) (bool, error) {
 	return true, nil
 }
 
-// SendHTML is used to send HTML to chatID using bot.
+// SendHTML: is used to send HTML to chatID using bot.
 // Consult this url in order to check allowed tags:
 // https://core.telegram.org/bots/api#html-style
 //
-// It returns a boolean indicating if the operation was successfull.
+// It returns a boolean indicating if the operation was successful.
 // If it is not, the error must provide a description about the problem.
 func (bot *Bot) SendHTML(chatID, content string) (bool, error) {
 	if len(strings.TrimSpace(chatID)) > 0 {
