@@ -1,6 +1,6 @@
 package telegrandma
 
-// GetUpdatesResponse: Struct representing an array of incoming updates from telegram bot
+// GetUpdatesResponse is the struct representing an array of incoming updates from telegram bot
 type GetUpdatesResponse struct {
 	Ok     bool `json:"ok"`
 	Result []struct {
