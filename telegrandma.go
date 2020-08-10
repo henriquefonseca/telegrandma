@@ -12,17 +12,24 @@ import (
 )
 
 const (
-	URLBase             = "https://api.telegram.org/"
+	// Telegram base url
+	URLBase = "https://api.telegram.org/"
+	// Telegram sendMessage endpoint
 	SendMessageEndpoint = "sendMessage"
-	GetUpdatesEndpoint  = "getUpdates"
+	// Telegram getUpdates endpoint
+	GetUpdatesEndpoint = "getUpdates"
 )
 
+// Struct representing a telegram bot
 type Bot struct {
 	BotToken   string
 	ChatID     string
 	HttpClient Requester
 }
 
+// Create a telegram bot with a token
+//
+// It returns an error if a token is not provided
 func NewBot(token string) (*Bot, error) {
 	if len(strings.TrimSpace(token)) < 1 {
 		return &Bot{}, errors.New("Token cannot be empty")
@@ -31,6 +38,7 @@ func NewBot(token string) (*Bot, error) {
 	return &Bot{BotToken: token}, nil
 }
 
+// GetUpdates returns an array of incoming updates from bot.
 func (bot *Bot) GetUpdates() (*GetUpdatesResponse, error) {
 	urlTarget := buildRootURLFrom(bot.BotToken) + "/" + GetUpdatesEndpoint
 
@@ -41,7 +49,17 @@ func (bot *Bot) GetUpdates() (*GetUpdatesResponse, error) {
 	resp, err := bot.HttpClient.Get(urlTarget, map[string]string{})
 	defer resp.Body.Close()
 
+	if err != nil {
+		log.Printf("Error trying request for url: %s\n", urlTarget)
+		return &GetUpdatesResponse{}, err
+	}
+
 	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Printf("Error trying to read response body from url: %s\n", urlTarget)
+		return &GetUpdatesResponse{}, err
+	}
 
 	var response GetUpdatesResponse
 	err = json.Unmarshal(body, &response)
@@ -54,7 +72,10 @@ func (bot *Bot) GetUpdates() (*GetUpdatesResponse, error) {
 	return &response, nil
 }
 
-//SendMessage: Send Telegram Messages using bot
+// SendMessage is used to send a message to chatID using bot
+//
+// It returns a boolean indicating if the operation was successfull.
+// If it is not, the error must provide a description about the problem.
 func (bot *Bot) SendMessage(chatID, content string) (bool, error) {
 	if len(strings.TrimSpace(chatID)) > 0 {
 		bot.ChatID = chatID
@@ -73,21 +94,26 @@ func (bot *Bot) SendMessage(chatID, content string) (bool, error) {
 	resp, err := bot.HttpClient.Get(urlTarget, nil)
 	defer resp.Body.Close()
 
+	if err != nil {
+		log.Printf("Request Error: [%v]\n", err)
+		return false, err
+	}
+
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(resp.Body)
 	newStr := buf.String()
 
 	log.Printf("Telegram response: %v\n", newStr)
 
-	if err != nil {
-		log.Printf("Request Error: [%v]\n", err)
-		return false, err
-	}
-
 	return true, nil
 }
 
-//SendHTML: Send HTML through Telegram Messages using bot
+// SendHTML is used to send HTML to chatID using bot.
+// Consult this url in order to check allowed tags:
+// https://core.telegram.org/bots/api#html-style
+//
+// It returns a boolean indicating if the operation was successfull.
+// If it is not, the error must provide a description about the problem.
 func (bot *Bot) SendHTML(chatID, content string) (bool, error) {
 	if len(strings.TrimSpace(chatID)) > 0 {
 		bot.ChatID = chatID
@@ -105,20 +131,20 @@ func (bot *Bot) SendHTML(chatID, content string) (bool, error) {
 	resp, err := bot.HttpClient.Get(urlTarget, nil)
 	defer resp.Body.Close()
 
+	if err != nil {
+		log.Printf("Request Error: [%v]\n", err)
+		return false, err
+	}
+
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(resp.Body)
 	newStr := buf.String()
 
 	log.Printf("Telegram response: %v\n", newStr)
 
-	if err != nil {
-		log.Printf("Request Error: [%v]\n", err)
-		return false, err
-	}
-
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		log.Printf("Request Error. Response Body: [%s]\n", resp.Body)
-		return false, errors.New(fmt.Sprintf("Request Error: Status code [%d]\n", resp.StatusCode))
+		return false, fmt.Errorf("Request Error: Status code [%d]\n", resp.StatusCode)
 	}
 
 	return true, nil

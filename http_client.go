@@ -5,8 +5,14 @@ import (
 	"net/http"
 )
 
+// Http client struct for requests
 type HttpClient struct{}
 
+// Get is a function for making requests using GET Http method.
+//
+// It receives an url and headers and creates a new GET request, returning *http.Response.
+//
+// If headers is null, headers default will be applied
 func (hc *HttpClient) Get(url string, headers map[string]string) (*http.Response, error) {
 	log.Printf("Requesting url %v\n", url)
 
@@ -19,7 +25,7 @@ func (hc *HttpClient) Get(url string, headers map[string]string) (*http.Response
 	}
 
 	if headers == nil {
-		headers = NewDefaultHeaders().Headers
+		headers = newDefaultHeaders().Headers
 	}
 
 	for k, v := range headers {
@@ -29,11 +35,11 @@ func (hc *HttpClient) Get(url string, headers map[string]string) (*http.Response
 	return client.Do(req)
 }
 
-type DefaultHeaders struct {
+type defaultHeaders struct {
 	Headers map[string]string
 }
 
-func NewDefaultHeaders() DefaultHeaders {
+func newDefaultHeaders() defaultHeaders {
 	headers := map[string]string{
 		"User-Agent":      `GrandmaClient`,
 		"Accept":          `text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3`,
@@ -41,5 +47,5 @@ func NewDefaultHeaders() DefaultHeaders {
 		"Accept-Language": `pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7`,
 	}
 
-	return DefaultHeaders{Headers: headers}
+	return defaultHeaders{Headers: headers}
 }

@@ -1,8 +1,9 @@
 ## Telegrandma
 
 [![Build Status](https://github.com/henriquefonseca/telegrandma/workflows/Go/badge.svg)](https://github.com/henriquefonseca/telegrandma/actions)
+[![Go Report Card](https://goreportcard.com/badge/github.com/henriquefonseca/telegrandma)](https://goreportcard.com/report/github.com/henriquefonseca/telegrandma)
 [![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/gomods/athens.svg)](go.mod)
-
+[![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
 A tiny wrapper around [Telegram](https://core.telegram.org/bots/api), that helps you use your telegram bots easily. So simple that even your grandmother could use it.
 
