@@ -5,15 +5,15 @@ import (
 	"net/http"
 )
 
-// HttpClient: Http client struct for requests
-type HttpClient struct{}
+// HTTPClient is the struct for making requests
+type HTTPClient struct{}
 
-// Get: is a function for making requests using GET Http method.
+// Get is a function for making requests using GET Http method.
 //
 // It receives an url and headers and creates a new GET request, returning *http.Response.
 //
 // If headers is null, headers default will be applied
-func (hc *HttpClient) Get(url string, headers map[string]string) (*http.Response, error) {
+func (hc *HTTPClient) Get(url string, headers map[string]string) (*http.Response, error) {
 	log.Printf("Requesting url %v\n", url)
 
 	t := &http.Transport{}

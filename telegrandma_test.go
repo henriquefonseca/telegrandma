@@ -14,11 +14,11 @@ func Test_Bot_Getting_Last_Updates(t *testing.T) {
 		t.Errorf("Unexpected error: [%s]\n", err)
 	}
 
-	httpClient := &HttpClientMock{}
-	httpClient.SetResponseHttpStatusCode(200)
-	httpClient.SetExpectedUrl("https://api.telegram.org/bot42:Oaua_fdk/getUpdates")
-	httpClient.SetResponseBody(responseBody)
-	bot.HttpClient = httpClient
+	HTTPClient := &HTTPClientMock{}
+	HTTPClient.SetResponseHTTPStatusCode(200)
+	HTTPClient.SetExpectedURL("https://api.telegram.org/bot42:Oaua_fdk/getUpdates")
+	HTTPClient.SetResponseBody(responseBody)
+	bot.HTTPClient = HTTPClient
 
 	updates, err := bot.GetUpdates()
 	if err != nil {
@@ -34,10 +34,10 @@ func Test_Bot_Sending_Message(t *testing.T) {
 		t.Errorf("Unexpected error: [%s]\n", err)
 	}
 
-	httpClient := &HttpClientMock{}
-	httpClient.SetResponseHttpStatusCode(200)
-	httpClient.SetExpectedUrl("https://api.telegram.org/bot42:Oaua_fdk/sendMessage?chat_id=987654321&parse_mode=html&text=What+happens+at+Nana%27s%E2%80%A6+stays+at+Nana%27s.")
-	bot.HttpClient = httpClient
+	HTTPClient := &HTTPClientMock{}
+	HTTPClient.SetResponseHTTPStatusCode(200)
+	HTTPClient.SetExpectedURL("https://api.telegram.org/bot42:Oaua_fdk/sendMessage?chat_id=987654321&parse_mode=html&text=What+happens+at+Nana%27s%E2%80%A6+stays+at+Nana%27s.")
+	bot.HTTPClient = HTTPClient
 
 	msg := "What happens at Nana's… stays at Nana's."
 	if success, err := bot.SendMessage(ChatID, msg); !success {
@@ -51,10 +51,10 @@ func Test_Bot_Sending_Html_Message(t *testing.T) {
 		t.Errorf("Unexpected error: [%s]\n", err)
 	}
 
-	httpClient := &HttpClientMock{}
-	httpClient.SetResponseHttpStatusCode(200)
-	httpClient.SetExpectedUrl("https://api.telegram.org/bot42:Oaua_fdk/sendMessage?chat_id=987654321&parse_mode=html&text=%3Cb%3EIf+nothing+is+going+well%2C+call+your+grandmother.%3C%2Fb%3E")
-	bot.HttpClient = httpClient
+	HTTPClient := &HTTPClientMock{}
+	HTTPClient.SetResponseHTTPStatusCode(200)
+	HTTPClient.SetExpectedURL("https://api.telegram.org/bot42:Oaua_fdk/sendMessage?chat_id=987654321&parse_mode=html&text=%3Cb%3EIf+nothing+is+going+well%2C+call+your+grandmother.%3C%2Fb%3E")
+	bot.HTTPClient = HTTPClient
 
 	msg := "<b>If nothing is going well, call your grandmother.</b>"
 	if success, err := bot.SendHTML(ChatID, msg); !success {

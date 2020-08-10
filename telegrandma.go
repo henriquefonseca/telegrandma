@@ -12,22 +12,22 @@ import (
 )
 
 const (
-	// URLBase: Telegram base url
+	// URLBase is the Telegram base url
 	URLBase = "https://api.telegram.org/"
-	// SendMessageEndpoint: Telegram sendMessage endpoint
+	// SendMessageEndpoint is the Telegram sendMessage endpoint
 	SendMessageEndpoint = "sendMessage"
-	// GetUpdatesEndpoint: Telegram getUpdates endpoint
+	// GetUpdatesEndpoint is the Telegram getUpdates endpoint
 	GetUpdatesEndpoint = "getUpdates"
 )
 
-// Bot: Struct representing a telegram bot
+// Bot is the Struct representing a telegram bot
 type Bot struct {
 	BotToken   string
 	ChatID     string
-	HttpClient Requester
+	HTTPClient Requester
 }
 
-// NewBot: Create a telegram bot with a token
+// NewBot function creates a telegram bot with a token
 //
 // It returns an error if a token is not provided
 func NewBot(token string) (*Bot, error) {
@@ -38,15 +38,15 @@ func NewBot(token string) (*Bot, error) {
 	return &Bot{BotToken: token}, nil
 }
 
-// GetUpdates: returns an array of incoming updates from bot.
+// GetUpdates returns an array of incoming updates from bot.
 func (bot *Bot) GetUpdates() (*GetUpdatesResponse, error) {
 	urlTarget := buildRootURLFrom(bot.BotToken) + "/" + GetUpdatesEndpoint
 
-	if bot.HttpClient == nil {
-		bot.HttpClient = new(HttpClient)
+	if bot.HTTPClient == nil {
+		bot.HTTPClient = new(HTTPClient)
 	}
 
-	resp, err := bot.HttpClient.Get(urlTarget, map[string]string{})
+	resp, err := bot.HTTPClient.Get(urlTarget, map[string]string{})
 	defer resp.Body.Close()
 
 	if err != nil {
@@ -72,7 +72,7 @@ func (bot *Bot) GetUpdates() (*GetUpdatesResponse, error) {
 	return &response, nil
 }
 
-// SendMessage: is used to send a message to chatID using bot
+// SendMessage is used to send a message to chatID using bot
 //
 // It returns a boolean indicating if the operation was successful.
 // If it is not, the error must provide a description about the problem.
@@ -85,13 +85,13 @@ func (bot *Bot) SendMessage(chatID, content string) (bool, error) {
 		return false, errors.New("ChatID cannot be empty")
 	}
 
-	urlTarget := prepareUrlWith(bot.BotToken, bot.ChatID, content)
+	urlTarget := prepareURLWith(bot.BotToken, bot.ChatID, content)
 
-	if bot.HttpClient == nil {
-		bot.HttpClient = new(HttpClient)
+	if bot.HTTPClient == nil {
+		bot.HTTPClient = new(HTTPClient)
 	}
 
-	resp, err := bot.HttpClient.Get(urlTarget, nil)
+	resp, err := bot.HTTPClient.Get(urlTarget, nil)
 	defer resp.Body.Close()
 
 	if err != nil {
@@ -108,7 +108,7 @@ func (bot *Bot) SendMessage(chatID, content string) (bool, error) {
 	return true, nil
 }
 
-// SendHTML: is used to send HTML to chatID using bot.
+// SendHTML is used to send HTML to chatID using bot.
 // Consult this url in order to check allowed tags:
 // https://core.telegram.org/bots/api#html-style
 //
@@ -122,13 +122,13 @@ func (bot *Bot) SendHTML(chatID, content string) (bool, error) {
 	if len(strings.TrimSpace(bot.ChatID)) < 1 {
 		return false, errors.New("ChatID cannot be empty")
 	}
-	urlTarget := prepareUrlWith(bot.BotToken, bot.ChatID, content)
+	urlTarget := prepareURLWith(bot.BotToken, bot.ChatID, content)
 
-	if bot.HttpClient == nil {
-		bot.HttpClient = new(HttpClient)
+	if bot.HTTPClient == nil {
+		bot.HTTPClient = new(HTTPClient)
 	}
 
-	resp, err := bot.HttpClient.Get(urlTarget, nil)
+	resp, err := bot.HTTPClient.Get(urlTarget, nil)
 	defer resp.Body.Close()
 
 	if err != nil {
@@ -144,28 +144,28 @@ func (bot *Bot) SendHTML(chatID, content string) (bool, error) {
 
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		log.Printf("Request Error. Response Body: [%s]\n", resp.Body)
-		return false, fmt.Errorf("Request Error: Status code [%d]\n", resp.StatusCode)
+		return false, fmt.Errorf("Request error: Status code [%d]", resp.StatusCode)
 	}
 
 	return true, nil
 }
 
-func prepareUrlWith(token, chatId, content string) string {
-	baseUrl, err := url.Parse(URLBase)
+func prepareURLWith(token, chatID, content string) string {
+	baseURL, err := url.Parse(URLBase)
 	if err != nil {
 		log.Println("Malformed URL: ", err.Error())
 	}
 
-	baseUrl.Path += "bot" + token + "/" + SendMessageEndpoint
+	baseURL.Path += "bot" + token + "/" + SendMessageEndpoint
 
 	params := url.Values{}
-	params.Add("chat_id", chatId)
+	params.Add("chat_id", chatID)
 	params.Add("text", content)
 	params.Add("parse_mode", "html")
 
-	baseUrl.RawQuery = params.Encode() // Escape Query Parameters
+	baseURL.RawQuery = params.Encode() // Escape Query Parameters
 
-	return baseUrl.String()
+	return baseURL.String()
 }
 
 func buildRootURLFrom(token string) string {
