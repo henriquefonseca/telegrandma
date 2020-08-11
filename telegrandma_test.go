@@ -8,36 +8,36 @@ import (
 var BotToken = "42:Oaua_fdk"
 var ChatID = "987654321"
 
-func Test_Bot_Getting_Last_Updates(t *testing.T) {
+func Test_Bot_Getting_Last_Updates_with_success(t *testing.T) {
 	bot, err := NewBot(BotToken)
 	if err != nil {
-		t.Errorf("Unexpected error: [%s]\n", err)
+		t.Errorf("Unexpected error: [%s]", err)
 	}
 
-	HTTPClient := &HTTPClientMock{}
-	HTTPClient.SetResponseHTTPStatusCode(200)
-	HTTPClient.SetExpectedURL("https://api.telegram.org/bot42:Oaua_fdk/getUpdates")
-	HTTPClient.SetResponseBody(responseBody)
-	bot.HTTPClient = HTTPClient
+	hTTPClient := &hTTPClientMock{}
+	hTTPClient.setResponseHTTPStatusCode(200)
+	hTTPClient.setExpectedURL("https://api.telegram.org/bot42:Oaua_fdk/getUpdates")
+	hTTPClient.setResponseBody(responseBody)
+	bot.hTTPClient = hTTPClient
 
 	updates, err := bot.GetUpdates()
 	if err != nil {
-		t.Errorf("Unexpected error: [%s]\n", err)
+		t.Errorf("Unexpected error: [%s]", err)
 	}
 
 	log.Println("updates.Result", updates.Result)
 }
 
-func Test_Bot_Sending_Message(t *testing.T) {
+func Test_Bot_Sending_Message_with_success(t *testing.T) {
 	bot, err := NewBot(BotToken)
 	if err != nil {
-		t.Errorf("Unexpected error: [%s]\n", err)
+		t.Errorf("Unexpected error: [%s]", err)
 	}
 
-	HTTPClient := &HTTPClientMock{}
-	HTTPClient.SetResponseHTTPStatusCode(200)
-	HTTPClient.SetExpectedURL("https://api.telegram.org/bot42:Oaua_fdk/sendMessage?chat_id=987654321&parse_mode=html&text=What+happens+at+Nana%27s%E2%80%A6+stays+at+Nana%27s.")
-	bot.HTTPClient = HTTPClient
+	hTTPClient := &hTTPClientMock{}
+	hTTPClient.setResponseHTTPStatusCode(200)
+	hTTPClient.setExpectedURL("https://api.telegram.org/bot42:Oaua_fdk/sendMessage?chat_id=987654321&parse_mode=html&text=What+happens+at+Nana%27s%E2%80%A6+stays+at+Nana%27s.")
+	bot.hTTPClient = hTTPClient
 
 	msg := "What happens at Nana's… stays at Nana's."
 	if success, err := bot.SendMessage(ChatID, msg); !success {
@@ -45,16 +45,16 @@ func Test_Bot_Sending_Message(t *testing.T) {
 	}
 }
 
-func Test_Bot_Sending_Html_Message(t *testing.T) {
+func Test_Bot_Sending_Html_Message_with_success(t *testing.T) {
 	bot, err := NewBot(BotToken)
 	if err != nil {
-		t.Errorf("Unexpected error: [%s]\n", err)
+		t.Errorf("Unexpected error: [%s]", err)
 	}
 
-	HTTPClient := &HTTPClientMock{}
-	HTTPClient.SetResponseHTTPStatusCode(200)
-	HTTPClient.SetExpectedURL("https://api.telegram.org/bot42:Oaua_fdk/sendMessage?chat_id=987654321&parse_mode=html&text=%3Cb%3EIf+nothing+is+going+well%2C+call+your+grandmother.%3C%2Fb%3E")
-	bot.HTTPClient = HTTPClient
+	hTTPClient := &hTTPClientMock{}
+	hTTPClient.setResponseHTTPStatusCode(200)
+	hTTPClient.setExpectedURL("https://api.telegram.org/bot42:Oaua_fdk/sendMessage?chat_id=987654321&parse_mode=html&text=%3Cb%3EIf+nothing+is+going+well%2C+call+your+grandmother.%3C%2Fb%3E")
+	bot.hTTPClient = hTTPClient
 
 	msg := "<b>If nothing is going well, call your grandmother.</b>"
 	if success, err := bot.SendHTML(ChatID, msg); !success {
@@ -71,7 +71,7 @@ func Test_Bot_With_No_Token(t *testing.T) {
 func Test_Bot_With_No_ChatID(t *testing.T) {
 	bot, err := NewBot(BotToken)
 	if err != nil {
-		t.Errorf("Unexpected error: [%s]\n", err)
+		t.Errorf("Unexpected error: [%s]", err)
 	}
 
 	if success, _ := bot.SendHTML("", "This message must not be sent"); success {

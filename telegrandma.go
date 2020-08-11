@@ -22,9 +22,9 @@ const (
 
 // Bot is the Struct representing a telegram bot
 type Bot struct {
-	BotToken   string
-	ChatID     string
-	HTTPClient Requester
+	botToken   string
+	chatID     string
+	hTTPClient Requester
 }
 
 // NewBot function creates a telegram bot with a token
@@ -32,21 +32,21 @@ type Bot struct {
 // It returns an error if a token is not provided
 func NewBot(token string) (*Bot, error) {
 	if len(strings.TrimSpace(token)) < 1 {
-		return &Bot{}, errors.New("Token cannot be empty")
+		return &Bot{}, errors.New("token cannot be empty")
 	}
 
-	return &Bot{BotToken: token}, nil
+	return &Bot{botToken: token}, nil
 }
 
 // GetUpdates returns an array of incoming updates from bot.
 func (bot *Bot) GetUpdates() (*GetUpdatesResponse, error) {
-	urlTarget := buildRootURLFrom(bot.BotToken) + "/" + GetUpdatesEndpoint
+	urlTarget := buildRootURLFrom(bot.botToken) + "/" + GetUpdatesEndpoint
 
-	if bot.HTTPClient == nil {
-		bot.HTTPClient = new(HTTPClient)
+	if bot.hTTPClient == nil {
+		bot.hTTPClient = new(hTTPClient)
 	}
 
-	resp, err := bot.HTTPClient.Get(urlTarget, map[string]string{})
+	resp, err := bot.hTTPClient.Get(urlTarget, map[string]string{})
 	defer resp.Body.Close()
 
 	if err != nil {
@@ -78,20 +78,20 @@ func (bot *Bot) GetUpdates() (*GetUpdatesResponse, error) {
 // If it is not, the error must provide a description about the problem.
 func (bot *Bot) SendMessage(chatID, content string) (bool, error) {
 	if len(strings.TrimSpace(chatID)) > 0 {
-		bot.ChatID = chatID
+		bot.chatID = chatID
 	}
 
-	if len(strings.TrimSpace(bot.ChatID)) < 1 {
-		return false, errors.New("ChatID cannot be empty")
+	if len(strings.TrimSpace(bot.chatID)) < 1 {
+		return false, errors.New("chatID cannot be empty")
 	}
 
-	urlTarget := prepareURLWith(bot.BotToken, bot.ChatID, content)
+	urlTarget := prepareURLWith(bot.botToken, bot.chatID, content)
 
-	if bot.HTTPClient == nil {
-		bot.HTTPClient = new(HTTPClient)
+	if bot.hTTPClient == nil {
+		bot.hTTPClient = new(hTTPClient)
 	}
 
-	resp, err := bot.HTTPClient.Get(urlTarget, nil)
+	resp, err := bot.hTTPClient.Get(urlTarget, nil)
 	defer resp.Body.Close()
 
 	if err != nil {
@@ -116,19 +116,19 @@ func (bot *Bot) SendMessage(chatID, content string) (bool, error) {
 // If it is not, the error must provide a description about the problem.
 func (bot *Bot) SendHTML(chatID, content string) (bool, error) {
 	if len(strings.TrimSpace(chatID)) > 0 {
-		bot.ChatID = chatID
+		bot.chatID = chatID
 	}
 
-	if len(strings.TrimSpace(bot.ChatID)) < 1 {
-		return false, errors.New("ChatID cannot be empty")
+	if len(strings.TrimSpace(bot.chatID)) < 1 {
+		return false, errors.New("chatID cannot be empty")
 	}
-	urlTarget := prepareURLWith(bot.BotToken, bot.ChatID, content)
+	urlTarget := prepareURLWith(bot.botToken, bot.chatID, content)
 
-	if bot.HTTPClient == nil {
-		bot.HTTPClient = new(HTTPClient)
+	if bot.hTTPClient == nil {
+		bot.hTTPClient = new(hTTPClient)
 	}
 
-	resp, err := bot.HTTPClient.Get(urlTarget, nil)
+	resp, err := bot.hTTPClient.Get(urlTarget, nil)
 	defer resp.Body.Close()
 
 	if err != nil {
