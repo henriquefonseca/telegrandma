@@ -24,7 +24,7 @@ const (
 type Bot struct {
 	botToken   string
 	chatID     string
-	hTTPClient Requester
+	hTTPClient requester
 }
 
 // NewBot function creates a telegram bot with a token
