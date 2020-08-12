@@ -51,13 +51,13 @@ func main() {
     
     // Send a text message
     msg := "What happens at Nana's… stays at Nana's."
-	if success, err := bot.SendMessage(ChatID, msg); !success {
+	if success, err := bot.SendMessage(chatID, msg); !success {
 		log.Printf("Unexpected error: The message was not sent. Error: [%s]", err)
     }
     
     // Send a message with allowed html tags
     msg := "<b>If nothing is going well, call your grandmother.</b>"
-	if success, err := bot.SendHTML(ChatID, msg); !success {
+	if success, err := bot.SendHTML(chatID, msg); !success {
 		log.Printf("Unexpected error: The message was not sent. Error: [%s]", err)
 	}
 
