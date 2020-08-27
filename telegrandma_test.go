@@ -62,6 +62,30 @@ func Test_Bot_Sending_Html_Message_with_success(t *testing.T) {
 	}
 }
 
+func Test_Bot_Sending_Markdown_Message_with_success(t *testing.T) {
+	bot, err := NewBot(BotToken)
+	if err != nil {
+		t.Errorf("Unexpected error: [%s]", err)
+	}
+
+	hTTPClient := &hTTPClientMock{}
+	hTTPClient.setResponseHTTPStatusCode(200)
+	hTTPClient.setExpectedURL("https://api.telegram.org/bot42:Oaua_fdk/sendMessage?chat_id=987654321&parse_mode=MarkdownV2&text=Grandma+is+cooking+%F0%9F%98%8B%0A%0A%09%F0%9F%8E%82+cake%0A%09%F0%9F%8D%9E+bread%0A%09%F0%9F%8D%9D+spaghetti%0A%09%F0%9F%8D%A6+ice+cream%0A%0A%09%2A+So+hungry+%2A")
+	bot.hTTPClient = hTTPClient
+
+	msg := `Grandma is cooking 😋
+
+	🎂 cake
+	🍞 bread
+	🍝 spaghetti
+	🍦 ice cream
+
+	* So hungry *`
+	if success, err := bot.SendMarkdown(ChatID, msg); !success {
+		t.Errorf("Unexpected error: The message was not sent. Error: [%s]", err)
+	}
+}
+
 func Test_Bot_With_No_Token(t *testing.T) {
 	if _, err := NewBot(""); err == nil {
 		t.Error("Unexpected error: Bots should not be initialized without a token")

@@ -85,7 +85,7 @@ func (bot *Bot) SendMessage(chatID, content string) (bool, error) {
 		return false, errors.New("chatID cannot be empty")
 	}
 
-	urlTarget := prepareURLWith(bot.botToken, bot.chatID, content)
+	urlTarget := prepareURLWith(bot.botToken, bot.chatID, content, "html")
 
 	if bot.hTTPClient == nil {
 		bot.hTTPClient = new(hTTPClient)
@@ -122,7 +122,7 @@ func (bot *Bot) SendHTML(chatID, content string) (bool, error) {
 	if len(strings.TrimSpace(bot.chatID)) < 1 {
 		return false, errors.New("chatID cannot be empty")
 	}
-	urlTarget := prepareURLWith(bot.botToken, bot.chatID, content)
+	urlTarget := prepareURLWith(bot.botToken, bot.chatID, content, "html")
 
 	if bot.hTTPClient == nil {
 		bot.hTTPClient = new(hTTPClient)
@@ -150,7 +150,49 @@ func (bot *Bot) SendHTML(chatID, content string) (bool, error) {
 	return true, nil
 }
 
-func prepareURLWith(token, chatID, content string) string {
+// SendMarkdown is used to send markdown to chatID using bot.
+// Consult this url in order to check allowed tags:
+// https://core.telegram.org/bots/api#markdown-style
+//
+// It returns a boolean indicating if the operation was successful.
+// If it is not, the error must provide a description about the problem.
+func (bot *Bot) SendMarkdown(chatID, content string) (bool, error) {
+	if len(strings.TrimSpace(chatID)) > 0 {
+		bot.chatID = chatID
+	}
+
+	if len(strings.TrimSpace(bot.chatID)) < 1 {
+		return false, errors.New("chatID cannot be empty")
+	}
+	urlTarget := prepareURLWith(bot.botToken, bot.chatID, content, "MarkdownV2")
+
+	if bot.hTTPClient == nil {
+		bot.hTTPClient = new(hTTPClient)
+	}
+
+	resp, err := bot.hTTPClient.Get(urlTarget, nil)
+	defer resp.Body.Close()
+
+	if err != nil {
+		log.Printf("Request Error: [%v]\n", err)
+		return false, err
+	}
+
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(resp.Body)
+	newStr := buf.String()
+
+	log.Printf("Telegram response: %v\n", newStr)
+
+	if resp.StatusCode < 200 || resp.StatusCode > 299 {
+		log.Printf("Request Error. Response Body: [%s]\n", resp.Body)
+		return false, fmt.Errorf("Request error: Status code [%d]", resp.StatusCode)
+	}
+
+	return true, nil
+}
+
+func prepareURLWith(token, chatID, content, parseMode string) string {
 	baseURL, err := url.Parse(URLBase)
 	if err != nil {
 		log.Println("Malformed URL: ", err.Error())
@@ -161,7 +203,7 @@ func prepareURLWith(token, chatID, content string) string {
 	params := url.Values{}
 	params.Add("chat_id", chatID)
 	params.Add("text", content)
-	params.Add("parse_mode", "html")
+	params.Add("parse_mode", parseMode)
 
 	baseURL.RawQuery = params.Encode() // Escape Query Parameters
 
