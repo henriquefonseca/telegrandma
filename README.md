@@ -62,7 +62,7 @@ func main() {
     }
     
     // Send a message with allowed markdown tags
-    `Grandma is cooking 😋
+    msg := `Grandma is cooking 😋
 
 	🎂 cake
 	🍞 bread
